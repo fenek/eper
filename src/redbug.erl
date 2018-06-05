@@ -137,8 +137,8 @@ unix([Node,Trc,Time,Msgs,Proc]) ->
     init(),
     maybe_halt(0)
   catch
-    C:R ->
-      io:fwrite("~p~n",[{C,R,erlang:get_stacktrace()}]),
+    C:R:S ->
+      io:fwrite("~p~n",[{C,R,S}]),
       maybe_halt(1)
   end;
 unix(X) ->
@@ -261,10 +261,10 @@ init() ->
       catch
         R ->
           exit({argument_error,R});
-        C:R ->
+        C:R:S ->
           case Cnf#cnf.debug andalso not Cnf#cnf.blocking of
             false-> ok;
-            true -> ?log([{C,R},{stack,erlang:get_stacktrace()}])
+            true -> ?log([{C,R},{stack,S}])
           end,
           exit(R)
       end

@@ -102,8 +102,8 @@ safer(LD,F,As) ->
     true ->
       try safe_reply(F,LD,apply(LD#ld.mod,F,As))
       catch
-        error:R ->
-          ?log([R,{mfa,{LD#ld.mod,F,As}},erlang:get_stacktrace()]),
+        error:R:S ->
+          ?log([R,{mfa,{LD#ld.mod,F,As}},S]),
           safe_default(F,LD);
         throw:R ->
           {stop,shutdown,R}
